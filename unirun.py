@@ -3,6 +3,7 @@
 import sys
 import os
 
+from runtimes import xdg
 from core.doctor import doctor
 from core.detector import detect
 
@@ -11,7 +12,7 @@ from runtimes import waydroid
 from runtimes import appimage
 from runtimes import native
 
-VERSION = "0.2"
+VERSION = "0.3"
 
 
 def show_help():
@@ -27,11 +28,14 @@ help
 
 Examples:
 
-python main.py run setup.exe
-python main.py run game.apk
-python main.py doctor
-""")
+unirun run setup.exe
+unirun run game.apk
 
+unirun setup.exe
+unirun mywall.jpg
+
+unirun doctor
+""")
 
 def show_version():
     print(f"UniRun v{VERSION}")
@@ -39,7 +43,11 @@ def show_version():
 
 def run_file(filepath):
 
-    if not os.path.exists(filepath):
+    if (
+        not filepath.startswith("http://")
+        and not filepath.startswith("https://")
+        and not os.path.exists(filepath)
+    ):
         print(f"[UniRun] File not found: {filepath}")
         return
 
@@ -56,6 +64,12 @@ def run_file(filepath):
     elif runtime == "appimage":
         appimage.launch(filepath)
 
+    elif runtime == "xdg":
+        xdg.launch(filepath)
+
+    elif runtime == "web":
+        xdg.launch(filepath)
+
     else:
         native.launch(filepath)
 
@@ -67,6 +81,18 @@ def main():
         return
 
     command = sys.argv[1]
+
+    known_commands = [
+        "help",
+        "version",
+        "doctor",
+        "run"
+    ]
+
+    # Direct launch support
+    if command not in known_commands:
+        run_file(command)
+        return
 
     if command == "help":
         show_help()
