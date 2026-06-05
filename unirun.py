@@ -6,6 +6,7 @@ import os
 from runtimes import xdg
 from core.doctor import doctor
 from core.detector import detect
+from core.search import find_file
 
 from runtimes import wine
 from runtimes import waydroid
@@ -48,8 +49,19 @@ def run_file(filepath):
         and not filepath.startswith("https://")
         and not os.path.exists(filepath)
     ):
-        print(f"[UniRun] File not found: {filepath}")
-        return
+
+        found = find_file(filepath)
+
+        if found:
+
+            print(f"[UniRun] Found: {found}")
+
+            filepath = found
+
+        else:
+
+            print(f"[UniRun] File not found: {filepath}")
+            return
 
     runtime = detect(filepath)
 
