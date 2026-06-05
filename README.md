@@ -53,15 +53,14 @@ unirun firefox              # Seamlessly launches native desktop environment bin
 unirun search minecraft     # Discovers and locates local asset configurations across partitions
 unirun [https://google.com](https://google.com)   # Identifies web target and routes natively via Web Engine
 
-Future Roadmap
+## 🛠️ Installation & Build From Source
 
-    v0.3 (Current): Core interception layer, explicit/implicit CLI parsing paths, standard desktop environment integrations.
+Since UniRun is written in Python, you can quickly set up a local development environment and run the orchestration layer natively on your Linux machine.
 
-    v0.4: Compatibility Rating Matrix (inspired by ProtonDB), incorporating direct community ratings and custom runner profiles.
-
-    v0.5: Self-healing auto-configuration layer (automatic missing package manager checks, sandboxed prefix management, seamless Waydroid initialization scripts).
-
-    Long-Term Target: Global Cross-Platform abstraction covering x86_64, ARM64, and RISC-V architectures uniformly.
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/KasishStar/UniRun.git](https://github.com/KasishStar/UniRun.git)
+cd UniRun```
 
 LICENSE:
 
