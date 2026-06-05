@@ -65,7 +65,7 @@ def run_file(filepath):
     # 1. Handle remote web URLs directly
     if filepath.startswith("http://") or filepath.startswith("https://"):
         add_entry(filepath)
-        print(f"\n[UniRun]  Remote target identified. Routing via Web Engine...")
+        print(f"\n[UniRun] INFO: Remote web target identified. Routing via Web Engine...")
         xdg.launch(filepath)
         return
 
@@ -77,19 +77,19 @@ def run_file(filepath):
             filepath = system_binary
         else:
             # If it's not local or global, check using your fuzzy finder logic
-            print(f"[UniRun] 🔍 Local file target not found. Initiating fuzzy filesystem lookup...")
+            print(f"[UniRun] SEARCH: Local target not found. Checking filesystem via fuzzy lookup...")
             found = find_file(filepath)
             if found:
-                print(f"[UniRun]  Target resolved: {found}")
+                print(f"[UniRun] RESOLVED: Target located at -> {found}")
                 filepath = found
             else:
-                print(f"[UniRun] ❌ Error: Specified file or command path token could not be resolved: '{filepath}'")
+                print(f"[UniRun] ERROR: Specified file or command path token could not be resolved: '{filepath}'")
                 return
 
     add_entry(filepath)
     runtime = detect(filepath)
 
-    print(f"[UniRun] 🛠️  Analyzing binaries... Compatibility layer selected: [{runtime.upper()}]")
+    print(f"[UniRun] STATUS: Binary analysis complete. Target layer: [{runtime.upper()}]")
 
     if runtime == "windows":
         wine.launch(filepath)
@@ -146,24 +146,24 @@ def main():
     
     elif command == "search":
         if len(sys.argv) < 3:
-            print("[UniRun] ❌ Error: Missing search parameters. Syntax: unirun search <query>")
+            print("[UniRun] ERROR: Missing search parameters. Syntax: unirun search <query>")
             return
         search_files(sys.argv[2])
 
     elif command == "install":
         if len(sys.argv) < 3:
-            print("[UniRun] ❌ Error: Missing target name. Syntax: unirun install <package>")
+            print("[UniRun] ERROR: Missing target name. Syntax: unirun install <package>")
             return
         install_package(sys.argv[2])
 
     elif command == "run":
         if len(sys.argv) < 3:
-            print("[UniRun] ❌ Error: Missing targeted execution reference file path.")
+            print("[UniRun] ERROR: Missing targeted execution reference file path.")
             return
         run_file(sys.argv[2])
 
     else:
-        print("[UniRun] ❌ Unknown command entered.")
+        print("[UniRun] ERROR: Unknown command entered.")
 
 
 if __name__ == "__main__":
