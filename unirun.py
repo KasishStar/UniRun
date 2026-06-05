@@ -2,6 +2,7 @@
 
 import sys
 import os
+import shutil
 
 from runtimes import xdg
 from core.doctor import doctor
@@ -46,25 +47,28 @@ def show_version():
 
 
 def run_file(filepath):
+    # 1. Handle remote web URLs directly
+    if filepath.startswith("http://") or filepath.startswith("https://"):
+        add_entry(filepath)
+        print(f"[UniRun] Detected runtime: web")
+        xdg.launch(filepath)
+        return
 
-    if (
-        not filepath.startswith("http://")
-        and not filepath.startswith("https://")
-        and not os.path.exists(filepath)
-    ):
-
-        found = find_file(filepath)
-
-        if found:
-
-            print(f"[UniRun] Found: {found}")
-
-            filepath = found
-
+    # 2. Check if it's NOT a direct path on your filesystem
+    if not os.path.exists(filepath):
+        # Check if it is a globally installed system CLI command/binary
+        system_binary = shutil.which(filepath)
+        if system_binary:
+            filepath = system_binary
         else:
-
-            print(f"[UniRun] File not found: {filepath}")
-            return
+            # If it's not local or global, check using your fuzzy finder logic
+            found = find_file(filepath)
+            if found:
+                print(f"[UniRun] Found: {found}")
+                filepath = found
+            else:
+                print(f"[UniRun] File or system command not found: {filepath}")
+                return
 
     add_entry(filepath)
     runtime = detect(filepath)
@@ -91,7 +95,6 @@ def run_file(filepath):
 
 
 def main():
-
     if len(sys.argv) < 2:
         show_help()
         return
@@ -126,27 +129,21 @@ def main():
         show_history()
     
     elif command == "search":
-
         if len(sys.argv) < 3:
             print("[UniRun] Missing search query")
             return
-
         search_files(sys.argv[2])
 
     elif command == "install":
-
         if len(sys.argv) < 3:
             print("[UniRun] Missing package name")
             return
-
         install_package(sys.argv[2])
 
     elif command == "run":
-
         if len(sys.argv) < 3:
             print("[UniRun] Missing file")
             return
-
         run_file(sys.argv[2])
 
     else:
