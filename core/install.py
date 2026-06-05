@@ -6,7 +6,11 @@ PACKAGES = {
     "steam": "steam",
     "waydroid": "waydroid",
     "git": "git",
-    "python": "python"
+    "python": "python",
+    "lutris": "lutris",
+    "bottles": "bottles",
+    "protonup-qt": "protonup-qt",
+    "heroic": "heroic-games-launcher"
 }
 
 
