@@ -7,6 +7,8 @@ from runtimes import xdg
 from core.doctor import doctor
 from core.detector import detect
 from core.search import find_file
+from core.history import add_entry, show_history
+from core.install import install_package
 
 from runtimes import wine
 from runtimes import waydroid
@@ -63,6 +65,7 @@ def run_file(filepath):
             print(f"[UniRun] File not found: {filepath}")
             return
 
+    add_entry(filepath)
     runtime = detect(filepath)
 
     print(f"[UniRun] Detected runtime: {runtime}")
@@ -98,6 +101,8 @@ def main():
         "help",
         "version",
         "doctor",
+        "history",
+        "install",
         "run"
     ]
 
@@ -114,6 +119,17 @@ def main():
 
     elif command == "doctor":
         doctor()
+
+    elif command == "history":
+        show_history()
+
+    elif command == "install":
+
+        if len(sys.argv) < 3:
+            print("[UniRun] Missing package name")
+            return
+
+        install_package(sys.argv[2])
 
     elif command == "run":
 
