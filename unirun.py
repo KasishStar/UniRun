@@ -65,7 +65,7 @@ def run_file(filepath):
     # 1. Handle remote web URLs directly
     if filepath.startswith("http://") or filepath.startswith("https://"):
         add_entry(filepath)
-        print(f"\n[UniRun] 🌐 Remote target identified. Routing via Web Engine...")
+        print(f"\n[UniRun]  Remote target identified. Routing via Web Engine...")
         xdg.launch(filepath)
         return
 
@@ -80,7 +80,7 @@ def run_file(filepath):
             print(f"[UniRun] 🔍 Local file target not found. Initiating fuzzy filesystem lookup...")
             found = find_file(filepath)
             if found:
-                print(f"[UniRun] ✨ Target resolved: {found}")
+                print(f"[UniRun]  Target resolved: {found}")
                 filepath = found
             else:
                 print(f"[UniRun] ❌ Error: Specified file or command path token could not be resolved: '{filepath}'")
