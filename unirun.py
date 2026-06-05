@@ -9,6 +9,7 @@ from core.detector import detect
 from core.search import find_file
 from core.history import add_entry, show_history
 from core.install import install_package
+from core.search_command import search_files
 
 from runtimes import wine
 from runtimes import waydroid
@@ -102,6 +103,7 @@ def main():
         "version",
         "doctor",
         "history",
+        "search",
         "install",
         "run"
     ]
@@ -122,6 +124,14 @@ def main():
 
     elif command == "history":
         show_history()
+    
+    elif command == "search":
+
+        if len(sys.argv) < 3:
+            print("[UniRun] Missing search query")
+            return
+
+        search_files(sys.argv[2])
 
     elif command == "install":
 
