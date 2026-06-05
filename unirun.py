@@ -3,6 +3,7 @@
 import sys
 import os
 
+from core.doctor import doctor
 from core.detector import detect
 
 from runtimes import wine
@@ -20,14 +21,15 @@ UniRun v{VERSION}
 Commands:
 
 run <file>
-help
+doctor
 version
+help
 
 Examples:
 
 python main.py run setup.exe
 python main.py run game.apk
-python main.py run Blender.AppImage
+python main.py doctor
 """)
 
 
@@ -71,6 +73,9 @@ def main():
 
     elif command == "version":
         show_version()
+
+    elif command == "doctor":
+        doctor()
 
     elif command == "run":
 
