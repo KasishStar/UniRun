@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 
 from core.detector import detect
 
@@ -9,17 +10,18 @@ from runtimes import waydroid
 from runtimes import appimage
 from runtimes import native
 
-
-VERSION = "0.1"
+VERSION = "0.2"
 
 
 def show_help():
-    print("""
-UniRun 0.1
+    print(f"""
+UniRun v{VERSION}
 
-Usage:
+Commands:
 
-python main.py run <file>
+run <file>
+help
+version
 
 Examples:
 
@@ -29,7 +31,16 @@ python main.py run Blender.AppImage
 """)
 
 
+def show_version():
+    print(f"UniRun v{VERSION}")
+
+
 def run_file(filepath):
+
+    if not os.path.exists(filepath):
+        print(f"[UniRun] File not found: {filepath}")
+        return
+
     runtime = detect(filepath)
 
     print(f"[UniRun] Detected runtime: {runtime}")
@@ -58,18 +69,19 @@ def main():
     if command == "help":
         show_help()
 
+    elif command == "version":
+        show_version()
+
     elif command == "run":
 
         if len(sys.argv) < 3:
-            print("Missing file")
+            print("[UniRun] Missing file")
             return
 
-        filepath = sys.argv[2]
-
-        run_file(filepath)
+        run_file(sys.argv[2])
 
     else:
-        print("Unknown command")
+        print("[UniRun] Unknown command")
 
 
 if __name__ == "__main__":
