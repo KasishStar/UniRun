@@ -32,11 +32,11 @@ help
 
 Examples:
 
-unirun run setup.exe
-unirun run game.apk
-
 unirun setup.exe
-unirun mywall.jpg
+unirun game.apk
+unirun xyz.AppImage
+unirun search File (Searches any file in the system)
+unirun install <package> (Installs a package)
 
 unirun doctor
 """)
