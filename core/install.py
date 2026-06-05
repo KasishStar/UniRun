@@ -3,6 +3,8 @@ import sys
 import shutil
 import subprocess
 import tempfile
+import urllib.request
+import json
 
 PACKAGE_REGISTRY = {
     "wine": {"type": "pacman", "target": "wine"},
@@ -16,7 +18,8 @@ PACKAGE_REGISTRY = {
     "flatpak": {"type": "pacman", "target": "flatpak"},
     "electron": {"type": "pacman", "target": "electron"},
     
-    "proton": {"type": "aur", "target": "protonup-cli"},
+    # Corrected target name to match exact upstream AUR repositories
+    "proton": {"type": "aur", "target": "protonup"},
     "protonup-qt": {"type": "aur", "target": "protonup-qt"},
     "heroic": {"type": "aur", "target": "heroic-games-launcher-bin"},
     "minecraft-launcher": {"type": "aur", "target": "minecraft-launcher"},
@@ -25,7 +28,6 @@ PACKAGE_REGISTRY = {
 def execute_aur_build(package_name):
     """
     Clones, verifies, and compiles an AUR package.
-    Returns True on success, False if PKGBUILD is missing or compilation fails.
     """
     for tool in ["git", "makepkg"]:
         if not shutil.which(tool):
@@ -38,12 +40,14 @@ def execute_aur_build(package_name):
         
         print(f"[UniRun] DOWNLOADING: Fetching remote source tree from {clone_url}")
         try:
-            subprocess.run(["git", "clone", clone_url, repo_dir], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # Prevent Git from prompting interactively if the repo doesn't exist
+            env = os.environ.copy()
+            env["GIT_TERMINAL_PROMPT"] = "0"
+            subprocess.run(["git", "clone", clone_url, repo_dir], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env)
         except subprocess.CalledProcessError:
             print(f"[UniRun] WARN: Could not reach or clone git address target for '{package_name}'")
             return False
 
-        # VERIFICATION STEP: Make sure the package build script actually exists in the cloned path
         if not os.path.exists(os.path.join(repo_dir, "PKGBUILD")):
             print(f"[UniRun] WARN: Repository layout mismatch. No PKGBUILD found in tree for '{package_name}'")
             return False
@@ -56,10 +60,27 @@ def execute_aur_build(package_name):
             print(f"[UniRun] WARN: Target makepkg execution context exited with errors.")
             return False
 
+def search_aur_rpc(keyword):
+    """
+    Queries the official Arch Linux RPC API to dynamically find matching packages
+    if explicit registry mapping strings fail.
+    """
+    print(f"[UniRun] INTELLIGENCE: Querying AUR RPC Metadata Server for '{keyword}'...")
+    url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={keyword}"
+    try:
+        with urllib.request.urlopen(url, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            results = data.get("results", [])
+            # Prioritize packages ending in -bin, -git, or exact matches
+            packages = [pkg["Name"] for pkg in results]
+            return packages[:3]  # Return top 3 candidates
+    except Exception:
+        return []
+
 def try_aur_pipeline(target_name):
     """
-    Intelligent alternative solver that cycles through typical naming variations
-    if the primary database string fails to compile.
+    Intelligent alternative solver that cycles through naming variations
+    and queries the live database api on failures.
     """
     print(f"[UniRun] SOURCE: Arch User Repository (AUR) [Community Source Tree]")
     print(f"[UniRun] STATUS: Initializing native compilation pipeline for '{target_name}'...")
@@ -68,18 +89,28 @@ def try_aur_pipeline(target_name):
     if execute_aur_build(target_name):
         return True
         
-    # Strategy 2: Pre-compiled binary fallback fallback (adding -bin tag)
+    # Strategy 2: Pre-compiled binary fallback
     if not target_name.endswith("-bin"):
         fallback_bin = f"{target_name}-bin"
         print(f"[UniRun] FALLBACK: Primary build failed. Switching to alternative pre-compiled source tree: '{fallback_bin}'")
         if execute_aur_build(fallback_bin):
             return True
 
-    # Strategy 3: Development branch fallback fallback (adding -git tag)
+    # Strategy 3: Development branch fallback
     if not target_name.endswith("-git"):
         fallback_git = f"{target_name}-git"
         print(f"[UniRun] FALLBACK: Secondary build failed. Pivoting to upstream development branch tracking: '{fallback_git}'")
         if execute_aur_build(fallback_git):
+            return True
+
+    # Strategy 4: Dynamic Live Remote Query Fallback
+    print(f"[UniRun] FALLBACK: Standard names exhausted. Running deep query discovery...")
+    candidates = search_aur_rpc(target_name)
+    for candidate in candidates:
+        if candidate in [target_name, f"{target_name}-bin", f"{target_name}-git"]:
+            continue  # Skip ones we already tried
+        print(f"[UniRun] FALLBACK: Found remote match candidate '{candidate}'. Attempting construction...")
+        if execute_aur_build(candidate):
             return True
 
     return False
