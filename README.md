@@ -23,6 +23,7 @@ This imposes an unnecessary cognitive load.
 UniRun aims to abstract and hide this entire layer of complexity. By providing a smart unified interface, UniRun dynamically evaluates, intercepts, and provisions dependencies out-of-the-box. Instead of running system-specific syntax like `wine setup.exe` or `waydroid app install game.apk`, users run one universal workflow command:
 ```bash
 unirun run application
+```
 
 UniRun instantly routes execution to the optimal ecosystem backend.
 🛠️ Commands & Usage
