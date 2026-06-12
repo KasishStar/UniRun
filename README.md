@@ -59,8 +59,7 @@ Since UniRun is written in Python, you can quickly set up a local development en
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/KasishStar/UniRun.git](https://github.com/KasishStar/UniRun.git)
-cd UniRun
+git clone [https://github.com/KasishStar/UniRun.git]
 ```
 
 LICENSE:
