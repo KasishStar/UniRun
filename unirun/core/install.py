@@ -84,7 +84,9 @@ def install_app(app_id):
             free_tag = f" {C.GRN}(Free){C.RST}" if src.get("free") else f" {C.YLW}(Paid){C.RST}"
             src_name = src.get("source", src["type"])
             print(f"  {C.CYN}{i+1}.{C.RST} {src_name}{rec}{free_tag}")
-            print(f"     {dim(f'{src[\"type\"]}: {src[\"package\"]}')}")
+            pkg_type = src["type"]
+            pkg_name = src["package"]
+            print(f"     {dim(f'{pkg_type}: {pkg_name}')}")
         print()
 
         raw = input(f"  {bold('Select source')} [1-{len(sources)}]: ").strip()
@@ -101,10 +103,12 @@ def install_app(app_id):
             print(f"  {warn('Cancelled.')}")
             return
 
-    print(f"  {ok(f'Selected: {selected[\"source\"]}')}")
+    src_name = selected.get("source", "")
+    print(f"  {ok(f'Selected: {src_name}')}")
     print()
 
+    app_name = app["name"]
     if install_source(selected):
-        print(f"  {ok(f'{app[\"name\"]} installed successfully!')}")
+        print(f"  {ok(f'{app_name} installed successfully!')}")
     else:
-        print(f"  {fail(f'Failed to install {app[\"name\"]}')}")
+        print(f"  {fail(f'Failed to install {app_name}')}")

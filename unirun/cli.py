@@ -90,7 +90,8 @@ def run_file(filepath):
                 # Check if it's in the app database
                 aid, app = resolve_app_name(filepath)
                 if app:
-                    print(f"  {info(f'{app[\"name\"]} is not installed.')}")
+                    app_name = app["name"]
+                    print(f"  {info(f'{app_name} is not installed.')}")
                     if confirm(f"Install {app['name']}?", True):
                         install_app(aid)
                     else:
