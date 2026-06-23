@@ -9,7 +9,7 @@ from unirun.core.doctor import doctor as run_doctor
 from unirun.core.detector import detect, get_file_info
 from unirun.core.search import find_file, fuzzy_find
 from unirun.core.history import add_entry, show_history
-from unirun.core.install import install_package
+from unirun.core.install import install_app, load_apps, resolve_app_name
 from unirun.core.search_command import search_files
 from unirun.runtimes import wine, waydroid, appimage, native
 from unirun.config import load_config, reset_config
@@ -87,6 +87,14 @@ def run_file(filepath):
                 filepath = found
             else:
                 print(f"  {fail(f'Could not resolve: {filepath}')}")
+                # Check if it's in the app database
+                aid, app = resolve_app_name(filepath)
+                if app:
+                    print(f"  {info(f'{app[\"name\"]} is not installed.')}")
+                    if confirm(f"Install {app['name']}?", True):
+                        install_app(aid)
+                    else:
+                        print(f"  {dim('Run: unirun install ' + aid + ' to install later')}")
                 return
 
     if is_url:
@@ -216,9 +224,9 @@ def main():
         cmd_search(args[1])
     elif cmd == "install":
         if len(args) < 2:
-            print(f"  {fail('Usage: unirun install <package>')}")
+            print(f"  {fail('Usage: unirun install <app_id>')}")
             return
-        install_package(args[1])
+        install_app(args[1])
     elif cmd == "run":
         if len(args) < 2:
             print(f"  {fail('Usage: unirun run <file>')}")

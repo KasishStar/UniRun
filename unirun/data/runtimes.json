@@ -1,0 +1,9 @@
+{
+  "runtimes": {
+    "wine": {"command": "wine", "install": "sudo pacman -S wine"},
+    "waydroid": {"command": "waydroid", "install": "yay -S waydroid"},
+    "flatpak": {"command": "flatpak", "install": "sudo pacman -S flatpak"},
+    "git": {"command": "git", "install": "sudo pacman -S git"},
+    "java": {"command": "java", "install": "sudo pacman -S jdk-openjdk"}
+  }
+}

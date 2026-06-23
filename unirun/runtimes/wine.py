@@ -1,30 +1,38 @@
 import os
 import subprocess
 import sys
+from unirun.config import load_config
+from unirun.ui import C, info, ok, warn, dim
+
+def get_prefix_path():
+    cfg = load_config()
+    return os.path.expanduser(cfg.get("wine_prefix", "~/.local/share/unirun/prefixes/default"))
+
+def ensure_prefix():
+    prefix = get_prefix_path()
+    if not os.path.exists(os.path.join(prefix, "drive_c")):
+        print(f"  {info('Creating Wine prefix...')} ({dim(prefix)})")
+        env = os.environ.copy()
+        env["WINEPREFIX"] = prefix
+        subprocess.run(["wineboot", "-u"], env=env,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"  {ok('Wine prefix ready')}")
+    return prefix
 
 def launch(filepath):
-    print(f"[UniRun]  Initializing environment prefixes...")
-
-    # Get the absolute folder containing the executable (e.g., GTA San Andreas folder)
     game_dir = os.path.dirname(os.path.abspath(filepath))
     game_exe = os.path.basename(filepath)
 
-    # Setup the isolation layer environment variables
-    # (Keeps the default prefix pristine or allows custom overrides seamlessly)
+    prefix = ensure_prefix()
     env = os.environ.copy()
-    if "WINEPREFIX" not in env:
-        env["WINEPREFIX"] = os.path.expanduser("~/.local/share/unirun/prefixes/default")
-    
-    # Ensure the custom prefix directory layout exists
-    os.makedirs(env["WINEPREFIX"], exist_ok=True)
+    env["WINEPREFIX"] = prefix
+    env["WINEDLLOVERRIDES"] = "winemenubuilder.exe=d"
 
-    print(f"[UniRun]  Working Directory Context shifted to: {game_dir}")
-    print(f"[UniRun]  Handing off process sequence to Wine environment...")
+    print(f"  {info(f'Wine prefix: {dim(prefix)}')}")
+    print(f"  {info(f'Working dir: {dim(game_dir)}')}")
+    print(f"  {ok('Launching with Wine...')}")
 
     try:
-        # 1. cwd=game_dir changes the terminal context to the game's folder right before launch
-        # 2. Popen with DEVNULL keeps your terminal beautiful and free of Wine clutter logs
-        # 3. preexec_fn=os.setpgrp prevents terminal signals from crashing the app process
         subprocess.Popen(
             ["wine", game_exe],
             cwd=game_dir,
@@ -33,6 +41,6 @@ def launch(filepath):
             stderr=subprocess.DEVNULL,
             preexec_fn=os.setpgrp
         )
-        print(f"[UniRun]  App launched successfully in detached state.")
+        print(f"  {ok('App launched in background')}")
     except Exception as e:
-        print(f"[UniRun] ❌ Critical: Failed to launch Wine backend instance: {e}")
+        print(f"  {warn(f'Failed: {e}')}")

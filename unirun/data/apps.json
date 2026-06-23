@@ -1,0 +1,671 @@
+{
+  "apps": {
+    "firefox": {
+      "name": "Firefox",
+      "description": "Fast, private web browser",
+      "categories": ["web", "browser"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "firefox", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "org.mozilla.firefox", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "chromium": {
+      "name": "Chromium",
+      "description": "Open-source web browser",
+      "categories": ["web", "browser"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "chromium", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "brave": {
+      "name": "Brave Browser",
+      "description": "Privacy-focused browser",
+      "categories": ["web", "browser"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "brave-bin", "source": "AUR (Binary)", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "com.brave.Browser", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "google-chrome": {
+      "name": "Google Chrome",
+      "description": "Fast, secure browser",
+      "categories": ["web", "browser"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "google-chrome", "source": "AUR", "recommended": true, "free": true}
+      ]
+    },
+    "vlc": {
+      "name": "VLC Media Player",
+      "description": "Plays everything",
+      "categories": ["media", "video"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "vlc", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "mpv": {
+      "name": "MPV Player",
+      "description": "Minimal video player",
+      "categories": ["media", "video"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "mpv", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "gimp": {
+      "name": "GIMP",
+      "description": "GNU Image Manipulation Program",
+      "categories": ["graphics", "editor"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "gimp", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "krita": {
+      "name": "Krita",
+      "description": "Digital painting studio",
+      "categories": ["graphics", "design"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "krita", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "blender": {
+      "name": "Blender",
+      "description": "3D creation suite",
+      "categories": ["graphics", "3d"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "blender", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "steam": {
+      "name": "Steam",
+      "description": "Gaming platform",
+      "categories": ["games", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "steam", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "lutris": {
+      "name": "Lutris",
+      "description": "Open gaming platform",
+      "categories": ["games", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "lutris", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "heroic": {
+      "name": "Heroic Games Launcher",
+      "description": "Epic/GOG games launcher",
+      "categories": ["games", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "heroic-games-launcher-bin", "source": "AUR", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "com.heroicgameslauncher.hgl", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "discord": {
+      "name": "Discord",
+      "description": "Chat & voice for gamers",
+      "categories": ["communication", "chat"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "discord", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "com.discordapp.Discord", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "telegram": {
+      "name": "Telegram Desktop",
+      "description": "Fast messaging app",
+      "categories": ["communication", "chat"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "telegram-desktop", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "obsidian": {
+      "name": "Obsidian",
+      "description": "Knowledge base / note-taking",
+      "categories": ["office", "notes"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "obsidian-bin", "source": "AUR", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "md.obsidian.Obsidian", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "kitty": {
+      "name": "Kitty Terminal",
+      "description": "GPU-based terminal emulator",
+      "categories": ["terminal"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "kitty", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "alacritty": {
+      "name": "Alacritty",
+      "description": "GPU-accelerated terminal",
+      "categories": ["terminal"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "alacritty", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "neovim": {
+      "name": "Neovim",
+      "description": "Modern Vim-based editor",
+      "categories": ["development", "editor"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "neovim", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "hyprland": {
+      "name": "Hyprland",
+      "description": "Dynamic tiling Wayland compositor",
+      "categories": ["system", "wm"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "hyprland", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "waybar": {
+      "name": "Waybar",
+      "description": "Wayland status bar",
+      "categories": ["system", "wm"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "waybar", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "rofi": {
+      "name": "Rofi",
+      "description": "Application launcher",
+      "categories": ["system", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "rofi", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "aur", "package": "rofi-lbonn-wayland", "source": "AUR (Wayland fork)", "recommended": false, "free": true}
+      ]
+    },
+    "wofi": {
+      "name": "Wofi",
+      "description": "Wayland launcher (like rofi)",
+      "categories": ["system", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "wofi", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "btop": {
+      "name": "Btop",
+      "description": "Resource monitor",
+      "categories": ["system", "monitor"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "btop", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "htop": {
+      "name": "Htop",
+      "description": "Interactive process viewer",
+      "categories": ["system", "monitor"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "htop", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "neofetch": {
+      "name": "Neofetch",
+      "description": "System info display",
+      "categories": ["system", "info"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "neofetch", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "fastfetch": {
+      "name": "Fastfetch",
+      "description": "Fast system info (neofetch replacement)",
+      "categories": ["system", "info"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "fastfetch", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "nodejs": {
+      "name": "Node.js",
+      "description": "JavaScript runtime",
+      "categories": ["development", "language"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "nodejs", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "go": {
+      "name": "Go",
+      "description": "Go programming language",
+      "categories": ["development", "language"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "go", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "rust": {
+      "name": "Rust",
+      "description": "Rust programming language",
+      "categories": ["development", "language"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "rust", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "docker": {
+      "name": "Docker",
+      "description": "Container platform",
+      "categories": ["development", "devops"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "docker", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "git": {
+      "name": "Git",
+      "description": "Version control system",
+      "categories": ["development", "tools"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "git", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "wine": {
+      "name": "Wine",
+      "description": "Run Windows apps on Linux",
+      "categories": ["system", "runtime"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "wine", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "pacman", "package": "wine-ge-custom", "source": "AUR (Proton fork)", "recommended": false, "free": true}
+      ]
+    },
+    "waydroid": {
+      "name": "Waydroid",
+      "description": "Run Android apps on Linux",
+      "categories": ["system", "runtime"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "waydroid", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "yay": {
+      "name": "Yay (AUR Helper)",
+      "description": "AUR package manager",
+      "categories": ["system", "package-manager"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "yay", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "qemu": {
+      "name": "QEMU",
+      "description": "Virtual machine emulator",
+      "categories": ["system", "virtualization"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "qemu-full", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "virt-manager": {
+      "name": "Virt-Manager",
+      "description": "GUI for VM management",
+      "categories": ["system", "virtualization"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "virt-manager", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "obs-studio": {
+      "name": "OBS Studio",
+      "description": "Screen recording & streaming",
+      "categories": ["media", "streaming"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "obs-studio", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "kdenlive": {
+      "name": "Kdenlive",
+      "description": "Video editor",
+      "categories": ["media", "video"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "kdenlive", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "audacity": {
+      "name": "Audacity",
+      "description": "Audio editor",
+      "categories": ["media", "audio"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "audacity", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "libreoffice": {
+      "name": "LibreOffice",
+      "description": "Office suite",
+      "categories": ["office", "documents"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "libreoffice-fresh", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "onlyoffice": {
+      "name": "OnlyOffice",
+      "description": "Office suite (MS compatible)",
+      "categories": ["office", "documents"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "onlyoffice-bin", "source": "AUR", "recommended": true, "free": true}
+      ]
+    },
+    "thunderbird": {
+      "name": "Thunderbird",
+      "description": "Email client",
+      "categories": ["communication", "email"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "thunderbird", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "filezilla": {
+      "name": "FileZilla",
+      "description": "FTP client",
+      "categories": ["web", "ftp"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "filezilla", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "qbittorrent": {
+      "name": "qBittorrent",
+      "description": "BitTorrent client",
+      "categories": ["web", "torrent"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "qbittorrent", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "spotify": {
+      "name": "Spotify",
+      "description": "Music streaming",
+      "categories": ["media", "music"],
+      "paid": true,
+      "url": "https://www.spotify.com/",
+      "sources": [
+        {"type": "pacman", "package": "spotify", "source": "Arch Official (requires account)", "recommended": true, "free": false, "url": "https://www.spotify.com/"},
+        {"type": "flatpak", "package": "com.spotify.Client", "source": "Flathub", "recommended": false, "free": false, "url": "https://www.spotify.com/"}
+      ]
+    },
+    "slack": {
+      "name": "Slack",
+      "description": "Team communication",
+      "categories": ["communication", "chat"],
+      "paid": true,
+      "url": "https://slack.com/",
+      "sources": [
+        {"type": "aur", "package": "slack-desktop", "source": "AUR", "recommended": true, "free": false, "url": "https://slack.com/"},
+        {"type": "flatpak", "package": "com.slack.Slack", "source": "Flathub", "recommended": false, "free": false, "url": "https://slack.com/"}
+      ]
+    },
+    "intellij-idea": {
+      "name": "IntelliJ IDEA",
+      "description": "Java IDE",
+      "categories": ["development", "ide"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "intellij-idea-community-edition", "source": "Arch Official (Community)", "recommended": true, "free": true},
+        {"type": "aur", "package": "intellij-idea-ultimate-edition", "source": "AUR (Ultimate - paid)", "recommended": false, "free": false, "url": "https://www.jetbrains.com/idea/"}
+      ]
+    },
+    "pycharm": {
+      "name": "PyCharm",
+      "description": "Python IDE",
+      "categories": ["development", "ide"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "pycharm-community-edition", "source": "Arch Official (Community)", "recommended": true, "free": true},
+        {"type": "aur", "package": "pycharm-professional", "source": "AUR (Professional - paid)", "recommended": false, "free": false, "url": "https://www.jetbrains.com/pycharm/"}
+      ]
+    },
+    "gcc": {
+      "name": "GCC",
+      "description": "GNU Compiler Collection",
+      "categories": ["development", "language"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "gcc", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "python": {
+      "name": "Python",
+      "description": "Python programming language",
+      "categories": ["development", "language"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "python", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "nvidia": {
+      "name": "NVIDIA Drivers",
+      "description": "NVIDIA GPU drivers",
+      "categories": ["system", "drivers"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "nvidia", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "pipewire": {
+      "name": "PipeWire",
+      "description": "Audio server",
+      "categories": ["system", "audio"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "pipewire", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "pacman", "package": "pipewire-alsa", "source": "Arch Official (ALSA)", "recommended": false, "free": true},
+        {"type": "pacman", "package": "pipewire-pulse", "source": "Arch Official (Pulse)", "recommended": false, "free": true}
+      ]
+    },
+    "mysql": {
+      "name": "MySQL",
+      "description": "Relational database",
+      "categories": ["development", "database"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "mysql", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "postgresql": {
+      "name": "PostgreSQL",
+      "description": "Relational database",
+      "categories": ["development", "database"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "postgresql", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "mongodb": {
+      "name": "MongoDB",
+      "description": "NoSQL database",
+      "categories": ["development", "database"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "mongodb", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "redis": {
+      "name": "Redis",
+      "description": "In-memory data store",
+      "categories": ["development", "database"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "redis", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "nginx": {
+      "name": "Nginx",
+      "description": "Web server",
+      "categories": ["development", "server"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "nginx", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "wireshark": {
+      "name": "Wireshark",
+      "description": "Network protocol analyzer",
+      "categories": ["networking"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "wireshark-qt", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "openssh": {
+      "name": "OpenSSH",
+      "description": "SSH connectivity",
+      "categories": ["networking"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "openssh", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "tor": {
+      "name": "Tor Browser",
+      "description": "Anonymous web browser",
+      "categories": ["web", "privacy"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "tor-browser", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "protonvpn": {
+      "name": "ProtonVPN",
+      "description": "VPN service",
+      "categories": ["networking", "vpn"],
+      "paid": true,
+      "url": "https://protonvpn.com/",
+      "sources": [
+        {"type": "aur", "package": "protonvpn", "source": "AUR", "recommended": true, "free": false, "url": "https://protonvpn.com/"}
+      ]
+    },
+    "steamcmd": {
+      "name": "SteamCMD",
+      "description": "Steam dedicated servers",
+      "categories": ["games", "server"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "steamcmd", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "dolphin-emu": {
+      "name": "Dolphin Emulator",
+      "description": "GameCube/Wii emulator",
+      "categories": ["games", "emulator"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "dolphin-emu", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "pcsx2": {
+      "name": "PCSX2",
+      "description": "PlayStation 2 emulator",
+      "categories": ["games", "emulator"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "pcsx2", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "rpcs3": {
+      "name": "RPCS3",
+      "description": "PlayStation 3 emulator",
+      "categories": ["games", "emulator"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "rpcs3", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "yuzu": {
+      "name": "Citron (Yuzu fork)",
+      "description": "Nintendo Switch emulator",
+      "categories": ["games", "emulator"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "yuzu-mainline-bin", "source": "AUR", "recommended": true, "free": true}
+      ]
+    },
+    "prismlauncher": {
+      "name": "Prism Launcher",
+      "description": "Minecraft launcher (open-source)",
+      "categories": ["games", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "prismlauncher", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "aur", "package": "prismlauncher-bin", "source": "AUR (Binary)", "recommended": false, "free": true}
+      ]
+    },
+    "openrgb": {
+      "name": "OpenRGB",
+      "description": "RGB lighting control",
+      "categories": ["system", "hardware"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "openrgb", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "lutris": {
+      "name": "Lutris",
+      "description": "Open gaming platform",
+      "categories": ["games", "launcher"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "lutris", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    },
+    "bottles": {
+      "name": "Bottles",
+      "description": "Wine prefix manager",
+      "categories": ["system", "wine"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "bottles", "source": "Arch Official", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "com.usebottles.bottles", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "protonup": {
+      "name": "ProtonUp-Qt",
+      "description": "Proton/Wine version manager",
+      "categories": ["games", "tools"],
+      "paid": false,
+      "sources": [
+        {"type": "aur", "package": "protonup-qt", "source": "AUR", "recommended": true, "free": true},
+        {"type": "flatpak", "package": "net.davidotek.pupgui2", "source": "Flathub", "recommended": false, "free": true}
+      ]
+    },
+    "winetricks": {
+      "name": "Winetricks",
+      "description": "Wine components installer",
+      "categories": ["system", "wine"],
+      "paid": false,
+      "sources": [
+        {"type": "pacman", "package": "winetricks", "source": "Arch Official", "recommended": true, "free": true}
+      ]
+    }
+  }
+}
