@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unirun"
+version = "0.4.0"
+description = "Run Anything. Anywhere. — Universal Application Runtime orchestration layer"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "KasishStar"}
+]
+requires-python = ">=3.10"
+keywords = ["runtime", "wine", "waydroid", "appimage", "linux", "universal"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Desktop Environment",
+    "Topic :: System :: Installation/Setup",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/KasishStar/UniRun"
+Source = "https://github.com/KasishStar/UniRun"
+Tracker = "https://github.com/KasishStar/UniRun/issues"
+
+[project.scripts]
+unirun = "unirun.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["unirun*"]
