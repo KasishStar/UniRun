@@ -5,7 +5,7 @@ import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from unirun.core.detector import detect
+from unirun.core.detector import detect, get_file_info
 from unirun.config import load_config, reset_config
 
 
@@ -48,6 +48,33 @@ class TestDetector(unittest.TestCase):
 
     def test_detect_native_no_ext(self):
         self.assertEqual(detect("Makefile"), "native")
+
+    def test_detect_code_py(self):
+        self.assertEqual(detect("script.py"), "native")
+
+    def test_detect_java_jar(self):
+        self.assertEqual(detect("app.jar"), "native")
+
+
+class TestGetFileInfo(unittest.TestCase):
+    def test_info_web_url(self):
+        info = get_file_info("https://example.com")
+        self.assertEqual(info["runtime"], "web")
+        self.assertEqual(info["type_name"], "Web URL")
+
+    def test_info_python_script(self):
+        info = get_file_info("test.py")
+        self.assertEqual(info["type_name"], "Python Script")
+        self.assertEqual(info["runtime"], "native")
+
+    def test_info_nonexistent(self):
+        info = get_file_info("/nonexistent/path/file.exe")
+        self.assertIsNone(info["size"])
+
+    def test_info_no_ext(self):
+        info = get_file_info("Makefile")
+        self.assertEqual(info["ext"], "")
+        self.assertEqual(info["type_name"], "Unknown")
 
 
 class TestConfig(unittest.TestCase):

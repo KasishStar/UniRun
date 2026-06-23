@@ -1,7 +1,7 @@
 import os
 from unirun.core.search import get_search_dirs
 
-def search_files(query):
+def search_files(query, raw=False):
     results = []
     query = query.lower()
     search_dirs = get_search_dirs()
@@ -15,6 +15,9 @@ def search_files(query):
                         break
             if len(results) >= 30:
                 break
+
+    if raw:
+        return results
 
     if not results:
         print("[UniRun] No results found")

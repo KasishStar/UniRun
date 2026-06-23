@@ -1,170 +1,231 @@
 import sys
 import os
 import shutil
-import argparse
+import textwrap
 
 from unirun import VERSION
 from unirun.runtimes import xdg
-from unirun.core.doctor import doctor
-from unirun.core.detector import detect
+from unirun.core.doctor import doctor as run_doctor
+from unirun.core.detector import detect, get_file_info
 from unirun.core.search import find_file, fuzzy_find
 from unirun.core.history import add_entry, show_history
 from unirun.core.install import install_package
 from unirun.core.search_command import search_files
 from unirun.runtimes import wine, waydroid, appimage, native
-from unirun.config import load_config
+from unirun.config import load_config, reset_config
+from unirun.ui import C, ok, fail, warn, info, bold, dim, header, runtime_badge, confirm, format_size
 
 VERBOSE = False
 
 def log(msg):
     if VERBOSE:
-        print(f"[UniRun] {msg}")
+        print(f"  {C.DIM}{msg}{C.RST}")
+
+def show_banner():
+    w = shutil.get_terminal_size().columns
+    print(f"""
+  {C.BLD}{C.CYN}U n i R u n{C.RST}  {C.DIM}v{VERSION}{C.RST}
+  {C.DIM}{'─' * min(w - 2, 40)}{C.RST}
+  {dim('Run Anything. Anywhere.')}
+""")
 
 def show_help():
-    print(f"""
- UniRun v{VERSION} - "Run Anything. Anywhere."
-======================================================================
-UniRun is a universal application orchestration layer that automatically
-detects, configures, and matches binaries to their correct runtimes.
+    show_banner()
+    print(f"""  {bold('USAGE')}
+    {C.GRN}unirun{C.RST} {dim('<command>')} {dim('[args]')}
+    {C.GRN}unirun{C.RST} {dim('<file>')}        {dim('# auto-detect and run')}
 
-USAGE:
-    unirun <command> [arguments]
-    unirun <file_path_or_command_name>
+  {bold('COMMANDS')}
+    {C.GRN}run{C.RST}     {dim('<file>')}     Run a file with auto-detected runtime
+    {C.GRN}info{C.RST}    {dim('<file>')}     Show file type and suggested runtime
+    {C.GRN}search{C.RST}  {dim('<query>')}   Search filesystem for matching files
+    {C.GRN}install{C.RST} {dim('<pkg>')}     Install a runtime or package
+    {C.GRN}doctor{C.RST}              Check installed runtimes status
+    {C.GRN}setup{C.RST}              Interactive configuration wizard
+    {C.GRN}history{C.RST}             Show recently launched files
+    {C.GRN}config{C.RST}              Show current configuration
+    {C.GRN}version{C.RST}             Show version
+    {C.GRN}help{C.RST}                Show this help
 
-CORE COMMANDS:
-    run <file>          Explicitly run a targeted application file.
-    search <query>      Fuzzy search for matching files across the filesystem.
-    install <runtime>   Automatically install missing compatibility layers.
-    doctor              Check the status of system compatibility backends.
-    history             View the execution log of previously launched files.
-    version             Display current software release variant.
-    help                Show this interactive command registry.
-    config              Show current configuration.
+  {bold('OPTIONS')}
+    {C.GRN}-v{C.RST}, {C.GRN}--verbose{C.RST}  Enable detailed logging
 
-OPTIONS:
-    --verbose, -v       Enable verbose logging.
-
-AUTOMATIC EXECUTION (Direct Launch):
-    You can completely omit the "run" command. Simply passing a file name,
-    path, or global application token will cause UniRun to intercept it,
-    evaluate the dependency platform, and execute it instantly.
-
-EXAMPLES:
-    unirun setup.exe                    -> Instantly provisions via Wine
-    unirun mobile_game.apk              -> Hands off execution to Waydroid
-    unirun application.AppImage         -> Mounts and executes standalone image
-    unirun firefox                      -> Seamlessly launches system native binaries
-    unirun search minecraft             -> Locates asset files across partitions
-    unirun install flatpak              -> Downloads package manager dependency
-    unirun --verbose setup.exe          -> Run with detailed logging
-======================================================================
+  {bold('EXAMPLES')}
+    {dim('unirun setup.exe')}       {dim('# Auto-runs via Wine')}
+    {dim('unirun game.apk')}        {dim('# Installs via Waydroid')}
+    {dim('unirun firefox')}         {dim('# Launches system binary')}
+    {dim('unirun info file.exe')}   {dim('# Shows file details')}
+    {dim('unirun -v setup.exe')}    {dim('# Run with debug logs')}
 """)
 
 def show_version():
-    print(f"UniRun v{VERSION}")
+    print(f"  UniRun v{VERSION}")
+
+def show_config():
+    cfg = load_config()
+    print(header("Configuration"))
+    print(f"  {bold('Config file:')} {cfg._path}")
+    print(f"  {bold('Search dirs:')} {len(cfg.get('search_dirs', []))} directories")
+    print(f"  {bold('History:')}    {cfg.get('history_file')}")
+    print()
 
 def run_file(filepath):
-    if filepath.startswith("http://") or filepath.startswith("https://"):
-        add_entry(filepath)
-        print(f"\n[UniRun] Remote web target identified. Routing via Web Engine...")
-        xdg.launch(filepath)
-        return
+    is_url = filepath.startswith("http://") or filepath.startswith("https://")
 
-    if not os.path.exists(filepath):
+    if not is_url and not os.path.exists(filepath):
         system_binary = shutil.which(filepath)
         if system_binary:
-            log(f"Resolved '{filepath}' to system binary: {system_binary}")
+            log(f"Resolved '{filepath}' to: {system_binary}")
             filepath = system_binary
         else:
-            print(f"[UniRun] Local target not found. Checking filesystem via fuzzy lookup...")
+            print(f"  {warn('File not found, searching...')}")
             found = find_file(filepath)
             if not found:
                 found = fuzzy_find(filepath)
             if found:
-                print(f"[UniRun] Resolved: Target located at -> {found}")
+                print(f"  {ok('Found at:')} {found}")
                 filepath = found
             else:
-                print(f"[UniRun] Error: Specified file or command path token could not be resolved: '{filepath}'")
+                print(f"  {fail(f'Could not resolve: {filepath}')}")
+                return
+
+    if is_url:
+        runtime = "web"
+    else:
+        info_data = get_file_info(filepath)
+        runtime = info_data["runtime"]
+        print(f"  {ok('Detected:')} {info_data['type_name']}  {runtime_badge(runtime)}")
+        size_str = info_data["size"]
+        if size_str:
+            print(f"  {dim(f'Size: {size_str}')}")
+        if not is_url and runtime in ("native", "windows") and info_data["ext"] not in (".exe", ".msi"):
+            if not confirm(f"Run '{os.path.basename(filepath)}' as {runtime.upper()}?", True):
+                print(f"  {warn('Cancelled')}")
                 return
 
     add_entry(filepath)
-    runtime = detect(filepath)
+    log(f"Runtime: {runtime}")
 
-    print(f"[UniRun] Binary analysis complete. Target layer: [{runtime.upper()}]")
-    log(f"Full path: {os.path.abspath(filepath)}")
+    runners = {
+        "windows": wine.launch,
+        "android": waydroid.launch,
+        "appimage": appimage.launch,
+        "xdg": xdg.launch,
+        "web": xdg.launch,
+        "native": native.launch,
+    }
+    runner = runners.get(runtime, native.launch)
+    try:
+        runner(filepath)
+    except Exception as e:
+        print(f"  {fail(f'Failed: {e}')}")
 
-    if runtime == "windows":
-        wine.launch(filepath)
-    elif runtime == "android":
-        waydroid.launch(filepath)
-    elif runtime == "appimage":
-        appimage.launch(filepath)
-    elif runtime == "xdg":
-        xdg.launch(filepath)
-    elif runtime == "web":
-        xdg.launch(filepath)
-    else:
-        native.launch(filepath)
+def cmd_info(filepath):
+    if not os.path.exists(filepath):
+        print(f"  {fail('File not found')}")
+        return
 
-def show_config():
+    info_data = get_file_info(filepath)
+    name = os.path.basename(filepath)
+
+    print(header(f"File: {name}"))
+    print(f"  {bold('Path:')}    {os.path.abspath(filepath)}")
+    print(f"  {bold('Size:')}    {info_data['size']}")
+    print(f"  {bold('Type:')}    {info_data['type_name']}")
+    print(f"  {bold('Ext:')}     {info_data['ext'] or '(none)'}")
+    print(f"  {bold('Runtime:')} {runtime_badge(info_data['runtime'])}")
+    if info_data["executable"] is not None:
+        print(f"  {bold('Exec:')}    {'Yes' if info_data['executable'] else 'No'}")
+    print()
+
+def cmd_setup():
+    print(header("UniRun Setup"))
+    print(f"  This will create a config file at ~/.config/unirun/config.json\n")
+
     cfg = load_config()
-    print(f"\nUniRun Configuration ({cfg._path}):")
-    print(f"  search_dirs: {cfg.get('search_dirs', ['default'])}")
-    print(f"  history_file: {cfg.get('history_file', '~/.local/share/unirun/history.log')}")
+    dirs = cfg.get("search_dirs", [])
+
+    print(f"  {bold('Search directories')} (where UniRun looks for files):")
+    new_dirs = []
+    for d in ["~/Downloads", "~/Documents", "~/Desktop", "~/Pictures", "~/Videos", "~/Music"]:
+        expanded = os.path.expanduser(d)
+        exists = "✓" if os.path.isdir(expanded) else " "
+        if confirm(f"  Search [{exists}] {d}?", d in dirs or os.path.isdir(expanded)):
+            new_dirs.append(d)
+
+    cfg.set("search_dirs", new_dirs)
+    print(f"\n  {ok('Configuration saved!')}")
+    print(f"  {dim('Edit manually: ~/.config/unirun/config.json')}\n")
+
+def cmd_doctor():
+    run_doctor()
+
+def cmd_search(query):
+    results = search_files(query, raw=True)
+    if not results:
+        print(f"  {warn(f'No results for: {query}')}")
+        return
+    print(header(f"Search: {query}"))
+    for i, r in enumerate(results[:20], 1):
+        print(f"  {C.DIM}{i:>3}.{C.RST} {r}")
+    if len(results) > 20:
+        print(f"  {dim(f'... and {len(results) - 20} more')}")
     print()
 
 def main():
     global VERBOSE
 
-    # Filter out --verbose before argparse to allow direct launch
-    args_list = sys.argv[1:]
-    verbose_mode = False
-    if "--verbose" in args_list or "-v" in args_list:
-        verbose_mode = True
+    args = [a for a in sys.argv[1:] if a not in ("--verbose", "-v")]
+    if len(sys.argv) != len(args) + 1:
         VERBOSE = True
-        args_list = [a for a in args_list if a not in ("--verbose", "-v")]
 
-    if not args_list:
+    if not args:
         show_help()
         return
 
-    command = args_list[0]
-    known_commands = ["help", "version", "doctor", "history", "search", "install", "run", "config"]
+    cmd = args[0]
+    cmds = ["help", "version", "doctor", "history", "search", "install", "run", "config", "setup", "info"]
 
-    if verbose_mode and command not in known_commands:
-        log(f"Direct launch mode for: {command}")
-
-    if command not in known_commands:
-        run_file(command)
+    if cmd not in cmds:
+        if VERBOSE:
+            log(f"Direct launch: {cmd}")
+        run_file(cmd)
         return
 
-    if command == "help":
+    if cmd == "help":
         show_help()
-    elif command == "version":
+    elif cmd == "version":
         show_version()
-    elif command == "doctor":
-        doctor()
-    elif command == "config":
+    elif cmd == "doctor":
+        cmd_doctor()
+    elif cmd == "config":
         show_config()
-    elif command == "history":
+    elif cmd == "setup":
+        cmd_setup()
+    elif cmd == "history":
         show_history()
-    elif command == "search":
-        if len(args_list) < 2:
-            print("[UniRun] Error: Missing search parameters. Syntax: unirun search <query>")
+    elif cmd == "info":
+        if len(args) < 2:
+            print(f"  {fail('Usage: unirun info <file>')}")
             return
-        search_files(args_list[1])
-    elif command == "install":
-        if len(args_list) < 2:
-            print("[UniRun] Error: Missing target name. Syntax: unirun install <package>")
+        cmd_info(args[1])
+    elif cmd == "search":
+        if len(args) < 2:
+            print(f"  {fail('Usage: unirun search <query>')}")
             return
-        install_package(args_list[1])
-    elif command == "run":
-        if len(args_list) < 2:
-            print("[UniRun] Error: Missing targeted execution reference file path.")
+        cmd_search(args[1])
+    elif cmd == "install":
+        if len(args) < 2:
+            print(f"  {fail('Usage: unirun install <package>')}")
             return
-        run_file(args_list[2])
+        install_package(args[1])
+    elif cmd == "run":
+        if len(args) < 2:
+            print(f"  {fail('Usage: unirun run <file>')}")
+            return
+        run_file(args[1])
     else:
-        print("[UniRun] Error: Unknown command entered.")
+        print(f"  {fail('Unknown command. Try: unirun help')}")
 
 if __name__ == "__main__":
     main()
